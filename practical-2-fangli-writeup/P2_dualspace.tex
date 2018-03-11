@@ -16,7 +16,8 @@
 
 \title{Practical 2: Classification\\ Classifying Malicious Software}
 \author{\textit{Author names, emails, Camelot.ai usernames}\\
-Fangli Geng, fgeng@g.harvard.edu, Camelot.ai fangligeng}
+Fangli Geng, fgeng@g.harvard.edu, Camelot.ai fangligeng\\
+Junran Yang, jyang3@gsd.harvard.edu, Camelot.ai junran}
 
 \begin{document}
 
@@ -127,6 +128,29 @@ methods you tried compared to your baselines.}
 
 Table 2 shows the best 5 cross-validation scores by Gradient Boosting with grid search. The hyper-parameters we tuned were max\_depth (the maximum depth of a tree, same as GBM, set as 2, 4, 6), eta (analogous to learning rate in GBM, set as 0.05, 0.1, 0.15, 0.2),  min\_child\_weight (defines the minimum sum of weights of all observations required in a child, set as 1, 2), colsample\_bytree (denotes the subsample ratio of columns for each split, in each level, set as 0.5, 1). Those 48 configurations were selection based on what we found people commonly used. We also tested models with higher and lower rounds numbers, which were different from what were the best indicated by cross-validation. Then we found it would give us worse performance by using those round numbers, compared to that from best round numbers setting given by cross validation.
 
+
+\begin{figure}[H]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{hyperparameter_tuning_1}
+  \caption{Max depth range from 10 to 235, and number of estimators range from 10 to 460.}
+  \label{fig:results}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{hyperparameter_tuning_2}
+  \caption{Max depth range from 10 to 45, and number of estimators range from 10 to 460.}
+  \label{fig:results}
+\endminipage\hfill
+\minipage{1\textwidth}
+  \begin{center}
+  \includegraphics[width=0.5\linewidth]{hyperparameter_tuning_3}
+  \caption{Max depth range from 40 to 49, and number of estimators range from 400 to 490.}
+  \label{fig:results}
+  \end{center}
+\endminipage
+\end{figure}
+
+Figure 1-3 show the hyper parameter tuning process for random forest model. We first ran the experiment in a rough region: max\_depth range from 10 to 235 with a step of 25, while n\_estimators range from 10 to 460 with a step of 50. From this experiment we found out that when depth is larger than 60, the increasing depth of the decision tree no longer contributes to train score or test score. That is because we only have a training set of around 3000 samples, and making the tree deeper than the square root of number of samples could not contribute to the accuracy of the decision trees. \\
+Then we ran 2 experiments with finer sampling. We found out from the results that we should make the depth as close to the square root of number of samples as possible, while choosing number of estimators to be around 400, since larger number of estimators no longer improve the performance of the model significantly. 
 
 \section{Discussion} 
 
