@@ -15,32 +15,33 @@
 
 
 \title{Practical 2: Classification\\ Classifying Malicious Software}
-\author{\textit{Author names, emails, Camelot.ai usernames}\\
-Fangli Geng, fgeng@g.harvard.edu, Camelot.ai fangligeng\\
-Junran Yang, jyang3@gsd.harvard.edu, Camelot.ai junran}
+\author{Antonio Copete, acopete@cfa.harvard.edu, Camelot.ai Copete \\
+	Fangli Geng, fgeng@g.harvard.edu, Camelot.ai fangligeng\\
+	Junran Yang, jyang3@gsd.harvard.edu, Camelot.ai junran}
 
 \begin{document}
-
-
 \maketitle{}
 
-
-\noindent \textit{This is the template you should use for submitting your practical assignments. 
-A full-credit assignment will go through each of these points and provide a thoughtful 
-clear answer.  Note that the limit for the report is 4 pages, please prioritize quality over 
-quantity in your submission.}
+%\citep{canali} 
+%\citep{canzanese}
+%\citep{rozenberg}
 
 \section{Technical Approach}
+
+The purpose of this practical was to classify a test set of 3,724 files in XML format into 15 classes of malware, using a training set of 3,086 labeled files. Our general approach consisted on the following steps:
+
 \begin{enumerate}
-\item \textbf{Feature Engineer}\\
-The practical is to detect the malwares based on system calls recorded. The information we can get are system call tags and call attributes. We preserved the sequence of system calls by generating the 4-grams for the call tags, since the sequence may infer the patterns of certain program behavior and anomaly behaviors usually indicate malwares. We also extract certain type of system call attributes, such as filename, url, keys, etc. We found some attributes are very suspicious, for example, "maxtrox.txt" always indicates the VB Malware and "GrayPigeon\_Hacker.com.cn" always indicates the Hupigon Malware. In addition, we also take total processes and threads number into account.
+\item \textbf{Feature Engineering}
 
-To analyze the system call tags (including 4-grams, 29,813 features in total) and suspicious attributes (110,465 features in total), we tried 2 ways: using either the count or the TF-IDF (term frequency – inverse document frequency) [System Call-based Detection of Malicious Processes.pdf]. The TF-IDF value increase proportionally to the number of times a word appears in the file and is offset by the frequency of the word among all files, which helps to adjust for the fact that some words appear more frequently in general.
+Initial inspection showed the XML data files to be structured hierarchically into a series of \emph{processes}, in turn composed of a series of \emph{threads}, in turn composed of a series of \emph{system calls}. Each of these were identified by a \emph{tag} as well as a number of \emph{attributes} indicated as sets of key-value pairs. Our simplest approach began by drawing $n$-grams (ordered sets) of up to 4 consecutive system call tags, initially without attributes, and our initial exploratory analysis tested the hypothesis that the presence and order of such system call tags was correlated with the distinct anomalous behavior found in different types of malware.
 
-To utilize TF-IDF, we first generated a giant string, which contains system call tags, 4-grams, and suspicious system call attributes, for each file in both train and test set. We then extracted the TF-IDF values from the train set by using sklearn.feature\_extraction.text.TfidfVectorizer, and at last applied it to the test set. 
+More advanced versions of this approach found in the literature (REF: Canali et al) suggested also drawing features based of $n$-bags (unordered non-consecutive sets) as well as $n$-tuples (ordered non-consecutive sets) of system calls and processes, as well as including attributes such as file names, file sizes, URLs, execution times, etc. We found some of these attributes to be predictive of some specific classes, such as the file \verb|maxtrox.txt| being always related to malware of class VB, and \verb|GrayPigeon_Hacker.com.cn| always indicating malware of class Hupigon. In addition, we also took into account the number of total processes and thread numbers.
+
+To analyze the system call tags (including 4-grams, 29,813 features in total) and suspicious attributes (110,465 features in total), we tried 2 methods: using either the number of counts, or the TF-IDF (term frequency---inverse document frequency) [REF: System Call-based Detection of Malicious Processes.pdf]. The TF-IDF value measures the relative frequency of a token across the data set; it is proportional to the number of times a token appears in a given file, offset by the frequency of the token across all files, which helps adjust for the absolute frequency of a given token in the whole dataset. The scikit-learn module \verb|sklearn.feature_extraction.text| includes the objects \verb|CountVectorizer| and \verb|TfidfVectorizer|, which tokenize large strings of tags (with or without arguments) into $n$-grams, and then transform them into counts and TF-IDF values in the resulting feature matrix, respectively.
+
 
 \item \textbf{Feature Selection}\\
-Since we have roughly 140,000 features but with only a little more than 3,000 data points, it's easy to cause our model to over-fit the data. To avoid over-fitting, we use sklearn SelectFromModel and sklearn.ensemble.RandomForestClassifier to reduce features and use cross-validation to determine the features we want to keep. To be specific, we ran a loop to continuous drop features, which importance is less than 0.1 times mean of all features' importance, until all features has similar importance. At the same time we compared the score from 5 fold cross-validation in each iteration. The highest score happened with around 5000 features, which is 1/20 of original feature size. 
+Since we derived roughly 140,000 features from a training set of only $\sim 3,000$ files, it was easy to cause our model to overfit the data. To avoid overfitting, we use sklearn module \verb|SelectFromModel| and the classifier \verb|sklearn.ensemble.RandomForestClassifier| to reduce features and use cross-validation to determine the features we want to keep. To be specific, we ran a loop to continuous drop features, which importance is less than 0.1 times mean of all features' importance, until all features has similar importance. At the same time we compared the score from 5 fold cross-validation in each iteration. The highest score happened with around 5000 features, which is 1/20 of original feature size. 
 \item\textbf{Model Selection}\\
 Regarding the classification tasks and limited number of data points, we first selected several models to start with, including RandomForestClassifier, sklearn.svm.SVC, sklearn.svm.LinearSVC and sklearn.linear\_model.SGDClassifier with default hyper-parameters. The RandomForestClassifier behaved superior that other models:
 RandomForestClassifier: 0.78105
@@ -171,6 +172,8 @@ but should summarize why you took the approach that your did. Credit will be giv
 First, we focused on new feature generating process. We came up with 1-gram, 2-gram, 3-gram, 4-gram, 10-gram of system call tags, useful system call attributes we identified, TFIDF for feature scaling. Then, based on the classification task we were give and the limited sample size we faced, we decided to test several different basic models (Random Forest Classifier, C-Support Vector Classifier, Linear-Support Vector Classifier, Stochastic Gradient Decent classifier) with different subsets of those data. With the results from those experiments, we decided to narrow down to Random Forest and deeply tune the hyperparameters to achieve best possible results. We further improved the Random Forest approach by 2-step classification, in order to capture more detail information in the Malware categories with low percentage. As the results is still not ideal with a 0.816 accuracy score, we did The accuracy can be higher with full feature scaled by TF-IDF. Furthermore, aiming to reduce the bias of the overfitting models, we took Gradient Boosting approach, which ended up giving the best accuracy among all the models we tested. 
 
 If there were more time to pursue better estimates, we would try to resample from the original data set as new training sets to reduce bias, and further tune semi-supervised Gradient boosting models. We also consider to create a 2-step Gradient Boosting approach to capture more detail information in the small malware categories as what we did for Random Forest.
+
+\bibliography{P2_dualspace}
 
 \end{document}
 
