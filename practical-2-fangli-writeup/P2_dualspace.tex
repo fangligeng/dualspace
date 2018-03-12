@@ -31,8 +31,7 @@
 The purpose of this practical was to classify a test set of 3,724 files in XML format into 15 classes of malware, using a training set of 3,086 labeled files. Our general approach consisted on the following steps:
 
 \begin{enumerate}
-\item \textbf{Feature Engineering}
-
+\item \textbf{Feature Engineering}\\
 Initial inspection showed the XML data files to be structured hierarchically into a series of \emph{processes}, in turn composed of a series of \emph{threads}, in turn composed of a series of \emph{system calls}. Each of these were identified by a \emph{tag} as well as a number of \emph{attributes} indicated as sets of key-value pairs. Our simplest approach began by drawing $n$-grams (ordered sets) of up to 4 consecutive system call tags, initially without attributes, and our initial exploratory analysis tested the hypothesis that the presence and order of such system call tags was correlated with the distinct anomalous behavior found in different types of malware.
 
 More advanced versions of this approach found in the literature (REF: Canali et al) suggested also drawing features based of $n$-bags (unordered non-consecutive sets) as well as $n$-tuples (ordered non-consecutive sets) of system calls and processes, as well as including attributes such as file names, file sizes, URLs, execution times, etc. We found some of these attributes to be predictive of some specific classes, such as the file \verb|maxtrox.txt| being always related to malware of class VB, and \verb|GrayPigeon_Hacker.com.cn| always indicating malware of class Hupigon. In addition, we also took into account the number of total processes and thread numbers.
@@ -41,75 +40,25 @@ To analyze the system call tags (including 4-grams, 29,813 features in total) an
 
 
 \item \textbf{Feature Selection}\\
-Since we derived roughly 140,000 features from a training set of only $\sim 3,000$ files, it was easy to cause our model to overfit the data. To avoid overfitting, we use sklearn module \verb|SelectFromModel| and the classifier \verb|sklearn.ensemble.RandomForestClassifier| to reduce features and use cross-validation to determine the features we want to keep. To be specific, we ran a loop to continuous drop features, which importance is less than 0.1 times mean of all features' importance, until all features has similar importance. At the same time we compared the score from 5 fold cross-validation in each iteration. The highest score happened with around 5000 features, which is 1/20 of original feature size. 
+Since we derived roughly 140,000 features from a training set of just over 3,000 files, it was easy to cause our model to overfit the data. To avoid overfitting, we used the sklearn module \verb|SelectFromModel| and the classifier \verb|sklearn.ensemble.RandomForestClassifier| to reduce features and use cross-validation to determine the features we want to keep. More specifically, we ran a loop to continuously drop features with importance of less than 10\% the mean importance across all features, monitoring the mean score from 5-fold cross-validation in each iteration. The highest score happened with around 5,000 features, which was 1/20 of the original feature size.
+% Antonio: I also dropped features with low variance across both the training and test set (unsupervised feature selection), and used a similar strategy to drop features according to RF importance. I went more conservatively and dropped only features that had importance = 0 in all 5 cross-validation sets. But Fangli's strategy is good, so we can leave it at that.
+
 \item\textbf{Model Selection}\\
-Regarding the classification tasks and limited number of data points, we first selected several models to start with, including RandomForestClassifier, sklearn.svm.SVC, sklearn.svm.LinearSVC and sklearn.linear\_model.SGDClassifier with default hyper-parameters. The RandomForestClassifier behaved superior that other models:
-RandomForestClassifier: 0.78105
-SVC: 0.57211
-LinearSVC: 0.76789
-SGDClassifier: 0.77158
+We began by exploring a number of classifiers for model selection from scikit-learn, including \verb|RandomForestClassifier| (Random Forest), \verb|svm.SVC| and \verb|svm.LinearSVC| (Support Vector Machine), and \verb|linear\_model.SGDClassifier| (Stochastic Gradient Descent), with default hyper-parameters. The Random Forest classifier yielded the best score of 0.78105 on the test data, compared to 0.57211 for SVC, 0.76789 for Linear SVC, and 0.77158 for SGD. We thus selected Random Forest as our main model and proceeded to tune it in the subsequent steps.
 
-In addition, we found the data distribution is heavily imbalanced which affects the models' performance. I (fangli. Antonio had a similar approach, a.k.a. sequential predictions) tried a 2-steps approach, which gave approximate 0.02 boost over similar Random Forest Classifier settings (0.81211 vs 0.79263). We grouped the classes into 4 "categories": None, Swizzor, VB, Others. We did classification over the "categories" first and then over the rest minor malwares. We also applied Neural Network to 2-steps approach but it can't beat Random Forest Classifier (0.79105 vs 0.81211)
+In addition, we found the class distribution in the training set to be heavily imbalanced. We therefore took a sequential approach to model training, dividing the data into 4 main categories: None (52.14\%), Swizzor (17.56\%), VB (12.18\%) and Others (18.12\%). We first trained the model on each of first 3 categories, and then separately on the minor categories. This approach resulted in an improvement of 0.02 in the test score, compared to training on all categories jointly (0.81211 vs 0.79263). We tried the same approach on a Neural Network for comparison, yielding a score of 0.79105 for training on separate categories, and confirming again Random Forest as the better model.
 
-We found that we had only collected information from every other thread caused by a bug in started example. Later experiment is based on the fixed feature collection, but given the limit of time, we only used tags and 4-grams count. With similar Random Forest Classifier settings (1-step), less features (no suspicious system call attributes) but preciser information, we got 0.15 boost (0.80789 vs 0.79263).
+Late in the process we also found a bug in the original code we were provided for extracting system call tags, which was causing the tags for every other thread to be skipped altogether. Our final results are based on the corrected version of feature extraction, but due to time constraints we limited ourselves to 4-gram tokens of system call tags without attributes. With the corrected feature set and a Random Forest classifier trained jointly across all categories, we obtained an improvement of 0.015 in the test data score (0.80789 vs 0.79263).
 
-Instead of repeating the 2-steps with new set of features, we started a new model experimenting, inspired by a Microsoft Malware Classification Challenge (BIG2015)\footnote{https://www.kaggle.com/c/malware-classification/discussion/13897}, which utilized xgboost and semi-supervised method to detect malwares from assembly code. As Gradient Boosting focuses more on reducing the bias than variance, which is different from what Random Forest classifier does. After grid searching for hyperparameters, the highest accuracy we got by xgboost is 0.82526. Furthermore, We tried semi-supervised Gradient Boosting, aiming to further reduce the bias of the model and incorporate information from test dataset into training dataset. We first generate pseudo labels of test set by choosing the max probability of our best model. Then we predict the test set again in a cross validation fashion with both train data and test data.
-For example, the test data set is split to 4 part A, B, C and D. We use the entire training data, and test data A, B, C with their pseudo labels, together as the new training set and we predict test set D. The same method is used to predict A, B and C. However, this approach didn't provide us decent results. We suspect the relatively low accuracy in the prediction set (0.82526) provided more inaccurate information than that it could offer to reduce bias. 
+In our last attempt at model experimentation, we were inspired by a Microsoft Malware Classification Challenge (BIG2015)\footnote{https://www.kaggle.com/c/malware-classification/discussion/13897} to utilize xgboost and a semi-supervised method to detect malware from assembly code. Gradient Boosting is different from Random Forest in that it focuses more on reducing the bias rather than variance. After grid searching for hyperparameters, the highest accuracy we got by xgboost was 0.82526. Furthermore, we tried semi-supervised Gradient Boosting, aiming to further reduce the bias of the model and incorporating information from test dataset into training dataset. We first generate pseudo labels for the test set by choosing the maximum probability of our best model. Then we predict on the test set again in a cross-validation fashion with both training data and test data.
+
+For example, the test data set is split to 4 parts: A, B, C and D. We use the entire training data, and test data A, B, C with their pseudo labels together as the new training set, and we predict on test set D. The same method is used to predict on A, B and C. However, this approach didn't provide us with decent results. We suspect the relatively low accuracy in the prediction set (0.82526) provided more inaccurate information than that it could offer to reduce bias.
+
+ 
 \end{enumerate}
-
-\textit{How did you tackle the problem? Credit will be given for:}
-
-  \begin{itemize}
-  \item \textit{Diving deeply into a method (rather than just trying
-    off-the-shelf tools with default settings). This can mean 
-    providing mathematical descriptions or pseudo-code.}
-  \item \textit{Making tuning and configuration decisions using thoughtful experimentation.  
-    This can mean carefully describing features added or hyperparameters tuned.}
-  \item \textit{Exploring several methods. This can contrasting two approaches
-    or perhaps going beyond those we discussed in class.}
-  \end{itemize}
-
-  \noindent \textit{Thoughtfully iterating on approaches is key.
-  If you used existing packages or referred to papers or blogs for ideas,
-  you should cite these in your report. }
-
-  \begin{table}
-    \centering
-    \begin{tabular}{@{}lll@{}}
-%      \toprule
-      &\multicolumn{2}{c}{Mention Features  } \\
-      & Feature & Value Set\\
-      \midrule
-      & Mention Head & $\mcV$ \\
-      & Mention First Word & $\mcV$ \\
-      & Mention Last Word & $\mcV$ \\
-      & Word Preceding Mention & $\mcV$ \\
-      & Word Following Mention & $\mcV$\\
-      & \# Words in Mention & $\{1, 2, \ldots \}$ \\
-      & Mention Type & $\mathcal{T}$ \\
-      \bottomrule
-      
-    \end{tabular}
-    \caption{Feature lists are a good way of illustrating problem specific tuning.}
-  \end{table}
-
 
 
 \section{Results}
-\textit{This section should report on the following questions: }
-
-\begin{itemize}
-\item \textit{Did you create and submit a set of
-  predictions? }
-
-\item  \textit{Did your methods give reasonable performance?  }
-\end{itemize}
-
-\noindent \textit{You must have \textit{at least one plot or table}
-that details the performances of different methods tried. 
-Credit will be given for quantitatively reporting (with clearly
-labeled and captioned figures and/or tables) on the performance of the
-methods you tried compared to your baselines.}
 
 \begin{table}
 \centering
@@ -155,20 +104,6 @@ Then we ran 2 experiments with finer sampling. We found out from the results tha
 
 \section{Discussion} 
 
-
-\textit{End your report by discussing the thought process behind your
-analysis. This section does not need to be as technical as the others 
-but should summarize why you took the approach that your did. Credit will be given for:
-}
-  \begin{itemize}
-  \item \textit{Explaining the your reasoning for why you seqentially chose to
-    try the approaches you did (i.e. what was it about your initial
-    approach that made you try the next change?).  }
-  \item Explaining the results.  \textit{Did the adaptations you tried improve
-    the results?  Why or why not?  Did you do additional tests to
-    determine if your reasoning was correct?  }
-  \end{itemize}
- 
 First, we focused on new feature generating process. We came up with 1-gram, 2-gram, 3-gram, 4-gram, 10-gram of system call tags, useful system call attributes we identified, TFIDF for feature scaling. Then, based on the classification task we were give and the limited sample size we faced, we decided to test several different basic models (Random Forest Classifier, C-Support Vector Classifier, Linear-Support Vector Classifier, Stochastic Gradient Decent classifier) with different subsets of those data. With the results from those experiments, we decided to narrow down to Random Forest and deeply tune the hyperparameters to achieve best possible results. We further improved the Random Forest approach by 2-step classification, in order to capture more detail information in the Malware categories with low percentage. As the results is still not ideal with a 0.816 accuracy score, we did The accuracy can be higher with full feature scaled by TF-IDF. Furthermore, aiming to reduce the bias of the overfitting models, we took Gradient Boosting approach, which ended up giving the best accuracy among all the models we tested. 
 
 If there were more time to pursue better estimates, we would try to resample from the original data set as new training sets to reduce bias, and further tune semi-supervised Gradient boosting models. We also consider to create a 2-step Gradient Boosting approach to capture more detail information in the small malware categories as what we did for Random Forest.

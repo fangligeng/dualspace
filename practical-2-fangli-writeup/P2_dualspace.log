@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  11 MAR 2018 22:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  11 MAR 2018 23:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -710,56 +710,45 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (19.2698pt too wide) in paragraph at lines 45--51
-\OT1/cmr/m/n/10.95 mod-els to start with, in-clud-ing Ran-dom-Forest-Clas-si-fi
-er, sklearn.svm.SVC, sklearn.svm.LinearSVC
- []
-
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 63.
-(/usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 63.
- [2]
-Overfull \hbox (38.90552pt too wide) in paragraph at lines 116--127
+Overfull \hbox (38.90552pt too wide) in paragraph at lines 65--76
  [][] 
  []
 
-<hyperparameter_tuning_1.png, id=24, 369.8618pt x 241.8636pt>
+[2] <hyperparameter_tuning_1.png, id=23, 369.8618pt x 241.8636pt>
 File: hyperparameter_tuning_1.png Graphic file (type png)
 
 <use hyperparameter_tuning_1.png>
-Package pdftex.def Info: hyperparameter_tuning_1.png used on input line 135.
+Package pdftex.def Info: hyperparameter_tuning_1.png used on input line 84.
 (pdftex.def)             Requested size: 235.59981pt x 154.06514pt.
 
-<hyperparameter_tuning_2.png, id=26, 369.8618pt x 241.8636pt>
+<hyperparameter_tuning_2.png, id=25, 369.8618pt x 241.8636pt>
 File: hyperparameter_tuning_2.png Graphic file (type png)
 
 <use hyperparameter_tuning_2.png>
-Package pdftex.def Info: hyperparameter_tuning_2.png used on input line 140.
+Package pdftex.def Info: hyperparameter_tuning_2.png used on input line 89.
 (pdftex.def)             Requested size: 235.59981pt x 154.06514pt.
 
-<hyperparameter_tuning_3.png, id=27, 369.8618pt x 241.8636pt>
+<hyperparameter_tuning_3.png, id=26, 369.8618pt x 241.8636pt>
 File: hyperparameter_tuning_3.png Graphic file (type png)
 
 <use hyperparameter_tuning_3.png>
-Package pdftex.def Info: hyperparameter_tuning_3.png used on input line 146.
+Package pdftex.def Info: hyperparameter_tuning_3.png used on input line 95.
 (pdftex.def)             Requested size: 235.59981pt x 154.06514pt.
- [3] [4 <./hyperparameter_tuning_1.png> <./hyperparameter_tuning_2.png> <./hype
-rparameter_tuning_3.png>] (./P2_dualspace.bbl) [5] (./P2_dualspace.aux)
+ [3 <./hyperparameter_tuning_1.png> <./hyperparameter_tuning_2.png> <./hyperpar
+ameter_tuning_3.png>] (./P2_dualspace.bbl)
+[4] (./P2_dualspace.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14929 strings out of 493014
- 286775 string characters out of 6133351
+ 14912 strings out of 493014
+ 286470 string characters out of 6133351
  338398 words of memory out of 5000000
- 18143 multiletter control sequences out of 15000+600000
+ 18129 multiletter control sequences out of 15000+600000
  13749 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,10n,61p,1153b,350s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,9n,61p,1153b,350s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
@@ -769,13 +758,12 @@ sr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr
 ocal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/loca
 l/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texl
-ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
-ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texliv
-e/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on P2_dualspace.pdf (5 pages, 4496445 bytes).
+ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texli
+ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on P2_dualspace.pdf (4 pages, 4479998 bytes).
 PDF statistics:
- 78 PDF objects out of 1000 (max. 8388607)
- 52 compressed objects within 1 object stream
+ 71 PDF objects out of 1000 (max. 8388607)
+ 47 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  28 words of extra memory for PDF output out of 10000 (max. 10000000)
 
