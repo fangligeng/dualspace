@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  11 MAR 2018 23:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  11 MAR 2018 23:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -710,7 +710,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (38.90552pt too wide) in paragraph at lines 65--76
+Overfull \hbox (38.90552pt too wide) in paragraph at lines 64--75
  [][] 
  []
 
@@ -718,21 +718,21 @@ Overfull \hbox (38.90552pt too wide) in paragraph at lines 65--76
 File: hyperparameter_tuning_1.png Graphic file (type png)
 
 <use hyperparameter_tuning_1.png>
-Package pdftex.def Info: hyperparameter_tuning_1.png used on input line 84.
+Package pdftex.def Info: hyperparameter_tuning_1.png used on input line 83.
 (pdftex.def)             Requested size: 235.59981pt x 154.06514pt.
 
 <hyperparameter_tuning_2.png, id=25, 369.8618pt x 241.8636pt>
 File: hyperparameter_tuning_2.png Graphic file (type png)
 
 <use hyperparameter_tuning_2.png>
-Package pdftex.def Info: hyperparameter_tuning_2.png used on input line 89.
+Package pdftex.def Info: hyperparameter_tuning_2.png used on input line 88.
 (pdftex.def)             Requested size: 235.59981pt x 154.06514pt.
 
 <hyperparameter_tuning_3.png, id=26, 369.8618pt x 241.8636pt>
 File: hyperparameter_tuning_3.png Graphic file (type png)
 
 <use hyperparameter_tuning_3.png>
-Package pdftex.def Info: hyperparameter_tuning_3.png used on input line 95.
+Package pdftex.def Info: hyperparameter_tuning_3.png used on input line 94.
 (pdftex.def)             Requested size: 235.59981pt x 154.06514pt.
  [3 <./hyperparameter_tuning_1.png> <./hyperparameter_tuning_2.png> <./hyperpar
 ameter_tuning_3.png>] (./P2_dualspace.bbl)

@@ -53,7 +53,6 @@ Late in the process we also found a bug in the original code we were provided fo
 In our last attempt at model experimentation, we were inspired by a Microsoft Malware Classification Challenge (BIG2015)\footnote{https://www.kaggle.com/c/malware-classification/discussion/13897} to utilize xgboost and a semi-supervised method to detect malware from assembly code. Gradient Boosting is different from Random Forest in that it focuses more on reducing the bias rather than variance. After grid searching for hyperparameters, the highest accuracy we got by xgboost was 0.82526. Furthermore, we tried semi-supervised Gradient Boosting, aiming to further reduce the bias of the model and incorporating information from test dataset into training dataset. We first generate pseudo labels for the test set by choosing the maximum probability of our best model. Then we predict on the test set again in a cross-validation fashion with both training data and test data.
 
 For example, the test data set is split to 4 parts: A, B, C and D. We use the entire training data, and test data A, B, C with their pseudo labels together as the new training set, and we predict on test set D. The same method is used to predict on A, B and C. However, this approach didn't provide us with decent results. We suspect the relatively low accuracy in the prediction set (0.82526) provided more inaccurate information than that it could offer to reduce bias.
-
  
 \end{enumerate}
 
