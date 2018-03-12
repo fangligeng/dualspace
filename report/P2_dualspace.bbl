@@ -1,0 +1,22 @@
+\begin{thebibliography}{}
+
+\bibitem[Canali et~al., 2012]{canali}
+Canali, D., Lanzi, A., Balzarotti, D., Kruegel, C., Christodorescu, M., and
+  Kirda, E. (2012).
+\newblock A quantitative study of accuracy in system call-based malware
+  detection.
+\newblock In {\em Proceedings of the 2012 International Symposium on Software
+  Testing and Analysis}, pages 122--132. ACM.
+
+\bibitem[Canzanese et~al., 2015]{canzanese}
+Canzanese, R., Mancoridis, S., and Kam, M. (2015).
+\newblock System call-based detection of malicious processes.
+\newblock In {\em Software Quality, Reliability and Security (QRS), 2015 IEEE
+  International Conference on}, pages 119--124. IEEE.
+
+\bibitem[Rozenberg et~al., 2010]{rozenberg}
+Rozenberg, B., Gudes, E., Elovici, Y., and Fledel, Y. (2010).
+\newblock Newapproach for detecting unknown malicious executables. j forensic
+  res 1: 112. doi: 10.4172/2157-7145.10001 12.
+
+\end{thebibliography}
